@@ -1,65 +1,143 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [taskInput, setTaskInput] = useState("");
+  const [tasks, setTasks] = useState([]);
+
+  // Load tasks from localStorage
+  useEffect(() => {
+    const storedTasks = localStorage.getItem("tasks");
+
+    if (storedTasks) {
+      setTasks(JSON.parse(storedTasks));
+    }
+  }, []);
+
+  // Save tasks to localStorage
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
+  // Add Task
+  const addTask = () => {
+    if (taskInput.trim() === "") return;
+
+    const newTask = {
+      id: Date.now(),
+      text: taskInput,
+      completed: false,
+    };
+
+    setTasks([newTask, ...tasks]);
+    setTaskInput("");
+  };
+
+  // Toggle Completion
+  const toggleTask = (id) => {
+    const updatedTasks = tasks.map((task) =>
+      task.id === id
+        ? { ...task, completed: !task.completed }
+        : task
+    );
+
+    setTasks(updatedTasks);
+  };
+
+  // Delete Task
+  const deleteTask = (id) => {
+    const filteredTasks = tasks.filter(
+      (task) => task.id !== id
+    );
+
+    setTasks(filteredTasks);
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
+    <main className="min-h-screen bg-gradient-to-br from-blue-950 via-blue-800 to-blue-500 flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-2xl bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-8">
+        
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-5xl font-bold text-white mb-3">
+            Task Manager
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+
+          <p className="text-blue-100 text-lg">
+            Organize your work beautifully
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+
+        {/* Input Section */}
+        <div className="flex gap-4 mb-8">
+          <input
+            type="text"
+            placeholder="Enter a new task..."
+            value={taskInput}
+            onChange={(e) =>
+              setTaskInput(e.target.value)
+            }
+            onKeyDown={(e) =>
+              e.key === "Enter" && addTask()
+            }
+            className="flex-1 px-5 py-4 rounded-2xl bg-white/20 text-white placeholder-blue-100 outline-none border border-white/20 focus:border-white transition-all duration-300"
+          />
+
+          <button
+            onClick={addTask}
+            className="px-6 py-4 bg-white text-blue-900 rounded-2xl font-semibold hover:scale-105 hover:bg-blue-100 transition-all duration-300 shadow-lg"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            Add
+          </button>
         </div>
-      </main>
-    </div>
+
+        {/* Task List */}
+        <div className="space-y-4">
+          {tasks.length === 0 ? (
+            <div className="text-center py-10 text-blue-100">
+              No tasks added yet
+            </div>
+          ) : (
+            tasks.map((task) => (
+              <div
+                key={task.id}
+                className="flex items-center justify-between bg-white/15 border border-white/10 backdrop-blur-md rounded-2xl px-5 py-4 hover:bg-white/20 transition-all duration-300"
+              >
+                {/* Task Text */}
+                <div
+                  onClick={() =>
+                    toggleTask(task.id)
+                  }
+                  className={`flex-1 cursor-pointer text-lg transition-all duration-300 ${
+                    task.completed
+                      ? "line-through text-blue-200 opacity-70"
+                      : "text-white"
+                  }`}
+                >
+                  {task.text}
+                </div>
+
+                {/* Delete Button */}
+                <button
+                  onClick={() =>
+                    deleteTask(task.id)
+                  }
+                  className="ml-4 px-4 py-2 rounded-xl bg-red-500/80 text-white hover:bg-red-600 transition-all duration-300"
+                >
+                  Delete
+                </button>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="mt-8 text-center text-blue-100 text-sm">
+          {tasks.length} task
+          {tasks.length !== 1 && "s"} total
+        </div>
+      </div>
+    </main>
   );
 }
