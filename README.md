@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Task Manager Application
+Overview
 
-## Getting Started
+The Task Manager Application is a modern React based productivity tool built with Next.js and Tailwind CSS. The project demonstrates the core concepts of React state management, component architecture, dynamic rendering, and side effect synchronization using hooks such as useState and useEffect.
 
-First, run the development server:
+The application allows users to create tasks, mark them as completed, delete tasks, and persist their data using the browser's local storage. The interface follows a neo minimal design approach with a clean glassmorphism inspired layout and responsive user experience.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+This project was developed as a practical exercise to strengthen understanding of frontend development concepts and modern React workflows.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Features
+Add Tasks
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Users can create new tasks by typing into the input field and clicking the Add button or pressing the Enter key.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Toggle Task Completion
 
-## Learn More
+Clicking on a task marks it as completed. Completed tasks are visually distinguished using a strike through effect and reduced opacity.
 
-To learn more about Next.js, take a look at the following resources:
+Delete Tasks
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Users can permanently remove tasks from the task list using the Delete button.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Persistent Storage
 
-## Deploy on Vercel
+Tasks are automatically saved in the browser using localStorage. Data remains available even after refreshing or reopening the browser.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Responsive Design
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The application is fully responsive and adapts to desktop, tablet, and mobile devices.
+
+Modern User Interface
+
+The interface includes:
+Glassmorphism effects
+Smooth transitions and hover animations
+Gradient backgrounds
+Rounded layouts
+Minimal and professional styling
+
+Technologies Used
+Frontend Framework
+
+React with Next.js App Router
+
+Styling
+
+Tailwind CSS
+
+State Management
+
+React Hooks
+
+useState for managing tasks and input state
+
+useEffect for handling persistence with localStorage
